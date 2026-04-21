@@ -180,105 +180,93 @@ ivaHtml += `
 }
 
 /* =========================
-   TICKET
+   GENERACIÓN DEL TICKET
 ========================= */
-
 document.getElementById("ticket").innerHTML = `
-
 <div class="header">
-
-<div class="header-info">
-
-<b>COMESTIBLES LA VILLA S.A.S</b><br>
-Nit 900755203-3<br>
-Cll 134 107 B 19<br>
-Bogotá<br><br>
-
-<b>Factura electrónica de venta</b><br>
-${factura}
-
-</div>
-
-<div id="qrcode"></div>
-
+    <div class="header-info">
+        <b>COMESTIBLES LA VILLA S.A.S</b><br>
+        Nit 900755203-3<br>
+        Cll 134 107 B 19<br>
+        Bogotá<br><br>
+        <b>Factura electrónica</b><br>
+        <span style="font-size: 12px;">${factura}</span>
+    </div>
+    <div id="qrcode"></div>
 </div>
 
 <div class="divider"></div>
-
-Fecha: ${fecha}<br><br>
-
-Cliente: ${cliente}<br>
-Nit / C.C.: ${nit}<br>
+<div class="row"><span>Fecha:</span> <span>${fecha}</span></div>
+<div class="row"><span>Cliente:</span> <span>${cliente}</span></div>
+<div class="row"><span>Nit / C.C.:</span> <span>${nit}</span></div>
 
 <div class="divider"></div>
-
 <div class="product-header">
-<span class="col-desc">Descripción</span>
-<span class="col-cant">Cant</span>
-<span class="col-imp">Imp</span>
-<span class="col-unit">Vr.Unit</span>
-<span class="col-total">Vr.Total</span>
+    <span class="col-desc">Descripción</span>
+    <span class="col-cant">Cant.</span>
+    <span class="col-imp">Imp.</span>
+    <span class="col-unit">Vr. Unit</span>
+    <span class="col-total">Vr. Total</span>
 </div>
-
 <div class="divider"></div>
 
 ${productos}
+
+
 
 <div class="divider"></div>
 
 ${ivaHtml}
 
-<div class="row total">
-<span>TOTAL</span>
-<span>${total}</span>
+<div class="row" style="font-weight: bold; font-size: 14px; margin: 8px 0;">
+    <span>TOTAL</span>
+    <span>${total}</span>
 </div>
 
 <div class="divider"></div>
 
-<div class="center"><b>RESUMEN IMPUESTOS</b></div>
+<div class="center" style="margin-bottom: 5px;"><b>RESUMEN IMPUESTOS</b></div>
 
-<div class="row">
-<span>Tarifa</span>
-<span>Base</span>
-<span>Valor</span>
+<div class="row" style="font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 2px;">
+    <span>Tarifa</span>
+    <span>Base</span>
+    <span>Valor</span>
 </div>
 
 ${base19 || valor19 ? `
 <div class="row">
-<span>19.00%</span>
-<span>${base19}</span>
-<span>${valor19}</span>
+    <span>19.00%</span>
+    <span>${base19}</span>
+    <span>${valor19}</span>
 </div>
 ` : ""}
 
 ${base5 || valor5 ? `
 <div class="row">
-<span>5.00%</span>
-<span>${base5}</span>
-<span>${valor5}</span>
+    <span>5.00%</span>
+    <span>${base5}</span>
+    <span>${valor5}</span>
 </div>
 ` : ""}
 
 ${base0 || valor0 ? `
 <div class="row">
-<span>0.00%</span>
-<span>${base0}</span>
-<span>${valor0}</span>
+    <span>0.00%</span>
+    <span>${base0}</span>
+    <span>${valor0}</span>
 </div>
 ` : ""}
 
 <div class="divider"></div>
 
-<div class="center"><b>FORMA DE PAGO</b></div>
+<div class="center" style="margin-bottom: 5px;"><b>FORMA DE PAGO</b></div>
 
-<div class="forma">
-  <span class="pago-texto">${pagoTexto}</span>
-  <span class="pago-valor">${pagoValor}</span>
+<div class="forma" style="display: flex; justify-content: space-between; font-size: 11px;">
+    <span class="pago-texto" style="flex: 1;">${pagoTexto}</span>
+    <span class="pago-valor" style="font-weight: bold;">${pagoValor}</span>
 </div>
 
 <div class="divider"></div>
-
-<div class="legal">
 
 A esta factura de venta aplican las normas relativas a la letra de cambio (art. 5 Ley 1231 de 2008).
 El Comprador declara haber recibido real y materialmente las mercancías o prestación de servicios descritos en este título - Valor.
@@ -328,24 +316,54 @@ height:90
 }
 
 
-/* PDF */
-async function generarPDF(){
+/* =======================================================
+   FUNCIÓN GENERAR PDF (CORTE DINÁMICO SIN HOJAS BLANCAS)
+========================================================== */
+async function generarPDF() {
+    const element = document.getElementById("ticket");
+    
+    if (!element || element.innerHTML.trim() === "") {
+        alert("Primero lee una factura");
+        return;
+    }
 
-const element = document.getElementById("ticket");
+    // 1. Esperamos a que el QR se termine de dibujar
+    await new Promise(r => setTimeout(r, 800));
 
-await new Promise(r => setTimeout(r,800));
+    // 2. Calculamos la altura real del contenido. 
+    // Usamos getBoundingClientRect para precisión milimétrica.
+    const rect = element.getBoundingClientRect();
+    const alturaPx = rect.height;
+    
+    // 3. Conversión exacta a mm (1px = 0.264583mm)
+    // No añadimos margen extra para que el corte sea inmediato.
+    const alturaMM = (alturaPx * 0.264583);
 
-const alturaPx = element.scrollHeight;
-const alturaMM = alturaPx * 0.264583;
+    const opciones = {
+        margin: 0,
+        filename: "ticket_villa_80mm.pdf",
+        image: { type: "jpeg", quality: 1.0 },
+        html2canvas: { 
+            scale: 3, 
+            useCORS: true,
+            logging: false,
+            scrollY: -window.scrollY, // Crucial: elimina el desplazamiento de pantalla
+            windowHeight: element.scrollHeight // Fuerza a medir solo el elemento
+        },
+        jsPDF: { 
+            unit: "mm", 
+            format: [80, alturaMM], // Ancho fijo, alto dinámico al píxel
+            orientation: "portrait",
+            compress: true
+        }
+    };
 
-html2pdf().set({
-
-margin:0,
-filename:"ticket_80mm.pdf",
-image:{type:"jpeg",quality:1},
-html2canvas:{scale:3},
-jsPDF:{unit:"mm",format:[80,alturaMM]}
-
-}).from(element).save();
-
+    // 4. Ejecución del proceso con limpieza de memoria
+    html2pdf().set(opciones).from(element).toPdf().get('pdf').then(function (pdf) {
+        // Este paso asegura que no se añadan páginas extra al final
+        const totalPages = pdf.internal.getNumberOfPages();
+        for (let i = totalPages; i > 1; i--) {
+            pdf.deletePage(i);
+        }
+    }).save();
 }

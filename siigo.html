@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Factura Siigo - POS</title>
 
-<meta charset="UTF-8">
-<title>Factura</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<link rel="stylesheet" href="index.css">
-
+    <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
+<div class="container-fluid p-0">
+    <div class="mobile-controls border-bottom shadow-sm">
+        <div class="mb-3">
+            <label class="form-label fw-bold">1. Cargar Factura</label>
+            <input type="file" id="pdfInput" class="form-control form-control-lg" accept="application/pdf">
+        </div>
+        
+        <div class="d-grid gap-2">
+            <button onclick="procesarPDF()" class="btn btn-dark btn-lg py-3">
+                📂 PROCESAR PDF
+            </button>
+            <button onclick="generarPDF()" class="btn btn-primary btn-lg py-3">
+                🖨️ GENERAR TICKET 80mm
+            </button>
+        </div>
+    </div>
 
-<div class="container">
-
-<h3>Factura Siigo</h3>
-
-<input type="file" id="pdfInput" accept="application/pdf">
-
-<br><br>
-
-<button onclick="procesarPDF()">Leer factura</button>
-<button onclick="generarPDF()">Descargar PDF</button>
-
-<br><br>
-
-<div id="ticket" class="ticket"></div>
-
+    <div class="mt-4 d-flex justify-content-center">
+        <div id="ticket" class="ticket">
+            </div>
+    </div>
 </div>
 
 <script src="index.js"></script>
-
 </body>
 </html>
