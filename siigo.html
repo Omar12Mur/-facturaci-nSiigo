@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<title>Factura</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h3>Factura Siigo</h3>
+
+<input type="file" id="pdfInput" accept="application/pdf">
+
+<br><br>
+
+<button onclick="procesarPDF()">Leer factura</button>
+<button onclick="generarPDF()">Descargar PDF</button>
+
+<br><br>
+
+<div id="ticket" class="ticket"></div>
+
+</div>
+
+<script src="index.js"></script>
+
+</body>
+</html>

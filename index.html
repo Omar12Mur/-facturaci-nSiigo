@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Facturación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Facturación</h1>
+    <button id="togglePrecios">Cambiar Precios</button>
+<a href="siigo.html">
+  <button>Cargar Factura</button>
+</a>
+    <div id="facturaForm">
+        <label for="cliente">Nombre del Cliente:</label>
+        <input type="text" id="cliente" name="cliente">
+</div>
+  <div id="productos">
+    <div class="producto" data-nombre="UVA X 50 G" data-precio1="1150" data-precio2="1250">UVA X 50 G </div>
+    <div class="producto" data-nombre="UVA X 100 G" data-precio1="2150" data-precio2="2250">UVA X 100 G </div>
+    <div class="producto" data-nombre="UVA X 200 G" data-precio1="4150" data-precio2="4250">UVA X 200 G </div>
+    <div class="producto" data-nombre="UVA X 500 G" data-precio1="10000" data-precio2="10000">UVA X 500 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="COCO  X 50 G" data-precio1="2150" data-precio2="2250">COCO X 50 G </div>
+    <div class="producto" data-nombre="COCO  X 100 G" data-precio1="4150" data-precio2="4250">COCO X 100 G </div>
+    <div class="producto" data-nombre="COCO  X 250 G" data-precio1="10000" data-precio2="10000">COCO X 250 G </div>
+    <div class="producto" data-nombre="UVA + COCO X 75 G" data-precio1="2150" data-precio2="2250">UVA+COCO X 75 G </div>
+    <div class="producto" data-nombre="UVA + COCO X 150 G" data-precio1="4150" data-precio2="4250">UVA+COCO X 150 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="CIRUELA X 50 G" data-precio1="2150" data-precio2="2250">CIRUELA X 50 G </div>
+    <div class="producto" data-nombre="CIRUELA X 100 G" data-precio1="4150" data-precio2="4250">CIRUELA X 100 G</div>
+    <div class="producto" data-nombre="CIRUELA X 200 G" data-precio1="8000" data-precio2="8150">CIRUELA X 200 G </div>
+    <div class="producto" data-nombre="CANELA X 10 G" data-precio1="2000" data-precio2="2150">CANELA X 10 G </div>
+    <div class="producto" data-nombre="CANELA X 20 G" data-precio1="3750" data-precio2="3830">CANELA X 20 G </div>
+    <div class="producto" data-nombre="CANELA X 30 G" data-precio1="5400" data-precio2="5500">CANELA X 30 G </div>
+    <div class="producto" data-nombre="CANELA X 50 G" data-precio1="9000" data-precio2="9150">CANELA X 50 G </div>
+    <div class="producto" data-nombre="CANELA PARTIDA X 10 G" data-precio1="1650" data-precio2="1750">CANELA PARTIDA X 10 G </div>
+    <div class="producto" data-nombre="CANELA PARTIDA X 100 G" data-precio1="14000" data-precio2="14500">CANELA PARTIDA X 100 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="CANELA MOLIDA X 20 G" data-precio1="2500" data-precio2="2650">CANELA MOLIDA X 20 G </div>
+    <div class="producto" data-nombre="CANELA MOLIDA X 50 G" data-precio1="5000" data-precio2="5150">CANELA MOLIDA X 50 G </div>
+    <div class="producto" data-nombre="CLAVO X 10 G" data-precio1="1500" data-precio2="1650">CLAVO X 10 G </div>
+    <div class="producto" data-nombre="CLAVO X 20 G" data-precio1="2900" data-precio2="3000">CLAVO X 20 G </div>
+    <div class="producto" data-nombre="ANIS ESTRELLA X 10 G" data-precio1="1500" data-precio2="1650">ANIS ESTRELLA X 10 G </div>
+    <div class="producto" data-nombre="ANIS ESTRELLA X 20 G" data-precio1="2900" data-precio2="3000">ANIS ESTRELLA X 20 G </div>
+    <div class="producto" data-nombre="ANIS EN PEPA X 20 G" data-precio1="1580" data-precio2="1750">ANIS EN PEPA X 20 G </div>
+    <div class="producto" data-nombre="FLOR DE JAMAICA X 18 G" data-precio1="2150" data-precio2="2250">FLOR DE JAMAICA X 18 G </div>
+    <div class="producto" data-nombre="FLOR DE MANZANILLA X 18 G" data-precio1="2150" data-precio2="2250">FLOR DE MANZANILLA X 18 G </div>
+    <div id="productos">
+    <div class="producto" data-nombre="LINAZA X 100 G" data-precio1="1650" data-precio2="1750">LINAZA X 100 G </div>
+    <div class="producto" data-nombre="LINAZA X 200 G" data-precio1="3000" data-precio2="3150">LINAZA X 200 G </div>
+    <div class="producto" data-nombre="LINAZA X 500 G" data-precio1="7000" data-precio2="7150">LINAZA X 500 G </div>
+    <div class="producto" data-nombre="LINAZA MOLIDA X 200 G" data-precio1="3000" data-precio2="3150">LINAZA MOLIDA X 200 G </div>
+    <div class="producto" data-nombre="LINAZA MOLIDA X 500 G" data-precio1="7000" data-precio2="7150">LINAZA MOLIDA X 500 G </div>
+    <div class="producto" data-nombre="BICARBONATO X 50 G" data-precio1="580" data-precio2="650">BICARBONATO X 50 G </div>
+    <div class="producto" data-nombre="BICARBONATO X 100 G" data-precio1="1000" data-precio2="1150">BICARBONATO X 100 G </div>
+    <div class="producto" data-nombre="BICARBONATO X 500 G" data-precio1="4000" data-precio2="4150">BICARBONATO X 500 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="NUEZ MOSCADA X 15 G" data-precio1="2000" data-precio2="2150">NUEZ MOSCADA X 15 G </div>
+    <div class="producto" data-nombre="CHIA X 200 G" data-precio1="6650" data-precio2="6900">CHIA X 200 G </div>
+    <div class="producto" data-nombre="AJONJOLI X 100 G" data-precio1="3300" data-precio2="3500">AJONJOLI X 100 G </div>
+    <div class="producto" data-nombre="GRAGEAS X 100 G" data-precio1="2500" data-precio2="2650">GRAGEAS X 100 G </div>
+    <div class="producto" data-nombre="HABA X 30 G" data-precio1="1150" data-precio2="1250">HABA X 30 G </div>
+    <div class="producto" data-nombre="HABA X 60 G" data-precio1="2150" data-precio2="2250">HABA X 60 G </div>
+    <div class="producto" data-nombre="HABA X 120 G" data-precio1="4150" data-precio2="4250">HABA X 120 G </div>
+    <div class="producto" data-nombre="MANI UVA X 40 G" data-precio1="1150" data-precio2="1250">MANI UVA X 40 G </div>
+    <div class="producto" data-nombre="MANI UVA X 80 G" data-precio1="2150" data-precio2="2250">MANI UVA X 80 G </div>
+    <div class="producto" data-nombre="MANI UVA X 200 G" data-precio1="4150" data-precio2="4250">MANI UVA X 200 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="MANI SAL X 40 G" data-precio1="1150" data-precio2="1250">MANI SAL X 40 G </div>
+    <div class="producto" data-nombre="MANI SAL X 80 G" data-precio1="2150" data-precio2="2250">MANI SAL X 80 G </div>
+    <div class="producto" data-nombre="MANI SAL X 200 G" data-precio1="4150" data-precio2="4250">MANI SAL X 200 G </div>
+    <div class="producto" data-nombre="MANI DULCE X 40 G" data-precio1="1150" data-precio2="1250">MANI DULCE X 40 G </div>
+    <div class="producto" data-nombre="MANI DULCE X 80 G" data-precio1="2150" data-precio2="2250">MANI DULCE X 80 G </div>
+    <div class="producto" data-nombre="MANI DULCE X 200 G" data-precio1="4150" data-precio2="4250">MANI DULCE X 200 G </div>
+    <div class="producto" data-nombre="MANI AJONJOLI X 40 G" data-precio1="1150" data-precio2="1250">MANI AJONJOLI X 40 G </div>
+    <div class="producto" data-nombre="MANI AJONJOLI X 80 G" data-precio1="2150" data-precio2="2250">MANI AJONJOLI X 80 G </div>
+    <div class="producto" data-nombre="MANI AJONJOLI X 200 G" data-precio1="4150" data-precio2="4250">MANI AJONJOLI X 200 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="MANI MIXTO X 40 G" data-precio1="1150" data-precio2="1250">MANI MIXTO X 40 G </div>
+    <div class="producto" data-nombre="MANI MIXTO X 80 G" data-precio1="2150" data-precio2="2250">MANI MIXTO X 80 G </div>
+    <div class="producto" data-nombre="MANI MIXTO X 200 G" data-precio1="4150" data-precio2="4250">MANI MIXTO X 200 G </div>
+    <div class="producto" data-nombre="MANI NATURAL X 40 G" data-precio1="1150" data-precio2="1250">MANI NATURAL X 40 G </div>
+    <div class="producto" data-nombre="MANI NATURAL X 80 G" data-precio1="2150" data-precio2="2250">MANI NATURAL X 80 G </div>
+    <div class="producto" data-nombre="MANI PICANTE X 40 G" data-precio1="1150" data-precio2="1250">MANI PICANTE X 40 G </div>
+    <div class="producto" data-nombre="MANI PICANTE X 80 G" data-precio1="2150" data-precio2="2250">MANI PICANTE X 80 G </div>
+    <div class="producto" data-nombre="MANI ARANDANOS X 40 G" data-precio1="1150" data-precio2="1250">MANI ARANDANOS X 40 G </div>
+    <div class="producto" data-nombre="MANI ARANDANOS X 80 G" data-precio1="2150" data-precio2="2250">MANI ARANDANOS X 80 G </div>
+    <div class="producto" data-nombre="ARANDANO X 50 G" data-precio1="2500" data-precio2="2650">ARANDANO X 50 G </div>
+    <div id="productos">
+    <div class="producto" data-nombre="ARANDANO X 100 G" data-precio1="4900" data-precio2="5000">ARANDANO X 100 G </div>
+    <div class="producto" data-nombre="PISTACHO X 35 G" data-precio1=4000" data-precio2="4150">PISTACHO X 35 G </div>
+    <div class="producto" data-nombre="MIX FRUTOS SECOS X 50 G" data-precio1="4000" data-precio2="4150">MIX FRUTOS SECOS X 50 G </div>
+    <div class="producto" data-nombre="MIX FRUTOS SECOS X 100 G" data-precio1="7900" data-precio2="8000">MIX FRUTOS SECOS X 100 G </div>
+    <div class="producto" data-nombre="NUEZ X 50 G" data-precio1="4000" data-precio2="4150">NUEZ X 50 G </div>
+    <div class="producto" data-nombre="NUEZ X 100 G" data-precio1="7900" data-precio2="8000">NUEZ X 100 G </div>
+    <div class="producto" data-nombre="ALMENDRA X 50 G" data-precio1="4000" data-precio2="4150">ALMENDRA X 50 G </div>
+    <div class="producto" data-nombre="ALMENDRA X 100 G" data-precio1="7900" data-precio2=8000">ALMENDRA X 100 G </div>
+</div>
+
+<div id="productos">
+    <div class="producto" data-nombre="MORITAS X 50 G" data-precio1="1750" data-precio2="1900">MORITAS X 50 G </div>
+    <div class="producto" data-nombre="MORITAS X 100 G" data-precio1="3400" data-precio2="3650">MORITAS X 100 G </div>
+    <div class="producto" data-nombre="GOMAS X 50 G" data-precio1="1750" data-precio2="1900">GOMAS X 50 G </div>
+    <div class="producto" data-nombre="GOMAS X 100 G" data-precio1="3400" data-precio2="3650">GOMAS X 100 G </div>
+    <div class="producto" data-nombre="ALMENDRA CONF X 50 G" data-precio1="2500" data-precio2="2650">ALMENDRA CONF X 50 G </div>
+    <div class="producto" data-nombre="ALMENDRA CONF X 100 G" data-precio1="4900" data-precio2="5000">ALMENDRA CONF X 100 G </div>
+    
+</div>
+    <div id="ticket">
+        <h2>Ticket</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Valor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="ticketBody">
+                <!-- Aquí se insertarán las filas dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+    <h3>Total a Pagar:$<span id="totalFactura">0</span></h3>
+    <button type="button" onclick="generarTicketPDF()" class="generar-ticket">DESCARGAR</button>
+    <div id="imagenTicket"></div>
+    <script src="facturacion.js"></script>
+    <script>
+        let modoPrecio = 1;
+        document.getElementById("togglePrecios").addEventListener("click", function() {
+            modoPrecio = modoPrecio === 1 ? 2 : 1;
+            document.querySelectorAll(".producto").forEach(el => {
+                el.textContent = `${el.dataset.nombre} - ${modoPrecio === 1 ? el.dataset.precio1 : el.dataset.precio2}`;
+            });
+        });
+    </script>
+</body>
+</html>
