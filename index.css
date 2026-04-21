@@ -191,25 +191,61 @@ input[type="file"]::file-selector-button:hover{
 background:#333;
 }
 /* PRINT */
-@media print{
+@media (max-width: 600px){
 
 body{
-background:white;
+    padding:5px;
 }
 
+/* contenedor */
 .container{
-max-width:80mm;
-margin:0;
-padding:0;
+    max-width:100%;
+    padding:5px;
 }
 
-button{
-display:none;
-}
-
+/* ticket más flexible en móvil */
 .ticket{
-box-shadow:none;
-border-radius:0;
-margin:0;
+    width:100%;
+    max-width:100%;
+    font-size:11px;
+    padding:10px;
+}
+
+/* header en columna */
+.header{
+    flex-direction:column;
+}
+
+.header-info{
+    width:100%;
+}
+
+/* QR centrado */
+.qr{
+    width:100%;
+    justify-content:center;
+    margin-top:10px;
+}
+
+/* productos mejor legibles */
+.product-header,
+.product-row{
+    font-size:11px;
+}
+
+/* forma de pago mejor alineada */
+.forma{
+    flex-direction:column;
+    gap:3px;
+}
+
+.pago-valor{
+    text-align:left;
+    min-width:auto;
+}
+
+/* botones más cómodos */
+button{
+    font-size:14px;
 }
 }
