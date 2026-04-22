@@ -32,16 +32,19 @@ display:flex;
 justify-content:space-between;
 align-items:flex-start;
 gap:5px;
+padding: 10px;
+
 }
 
 .header-info{
-font-size:10px;
+font-size:9px;
 width:70%;
+text-align: center;
 }
 
 .qr{
-width:85px;
-height:85px;
+width:80px;
+height:80px;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -107,6 +110,7 @@ margin:1px 0;
 text-align:center;
 font-weight:bold;
 margin-top:5px;
+font-size: 10;
 
 }
 

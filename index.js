@@ -22,6 +22,7 @@ async function procesarPDF() {
             text += content.items.map(item => item.str).join(" ") + " ";
         }
 
+        // Limpieza de espacios y saltos de línea para que todo sea una sola cadena
         text = text.replace(/\s+/g, " ");
         extraerDatos(text);
     };
@@ -30,18 +31,44 @@ async function procesarPDF() {
 
 function extraerDatos(text) {
     /* =========================
-       DATOS DE CABECERA
+       DATOS DE CABECERA (REGEX OPTIMIZADAS)
     ========================= */
+
     const factura = text.match(/CV\s*\d+/)?.[0] || "";
     const fecha = text.match(/\d{4}-\d{2}-\d{2}/)?.[0] || "";
-    const cliente = text.match(/Cliente\s+(.*?)\s+Nit/i)?.[1] || "";
-    const nit = text.match(/Nit\s*\/\s*C\.C\.\s*([\d\.\-]+)/)?.[1] || "";
+    const vendedor = text.match(/Vendedor:?\s*(.*?)\s+Cliente/i)?.[1]?.trim() || "";
+    const cliente = text.match(/Cliente:?\s*(.*?)\s+Nit/i)?.[1]?.trim() || "";
+    
+    // Captura el NIT para usarlo como punto de referencia
+    const nitMatch = text.match(/Nit\s*\/\s*C\.C\.?\s*:?\s*([\d\.\-]+)/i);
+    const nit = nitMatch ? nitMatch[1].trim() : "";
 
+    /* =========================
+       EXTRACCIÓN DE DIRECCIÓN DINÁMICA
+    ========================= */
+/* =========================
+   EXTRACCIÓN DE DIRECCIÓN (LIMPIEZA DE DUPLICADOS)
+========================= */
+let direccionCliente = "";
+if (nit) {
+    const nitEscapado = nit.replace(/\./g, "\\.");
+    const regexDir = new RegExp(nitEscapado + "\\s+(.*?)\\s+(Descripción|Ciudad|Bogotá|Teléfono|Email)", "i");
+    const matchDir = text.match(regexDir);
+    
+    if (matchDir) {
+        // 1. Atrapamos el texto que sigue al NIT
+        let tempDir = matchDir[1].trim();
+        
+        // 2. LIMPIEZA: Si el texto empieza con "Dirección", lo borramos para que no se repita
+        // Esto quita "Dirección", "Direccion", "DIRECCION", etc.
+        direccionCliente = tempDir.replace(/^direcci[oó]n:?\s*/i, "");
+    }
+}
     let cufeMatch = text.match(/[a-f0-9]{64,}/i);
     cufe = cufeMatch ? cufeMatch[0] : "";
 
     /* =========================
-       IMPUESTOS Y TOTALES (DEFINICIÓN SEGURA)
+       IMPUESTOS Y TOTALES
     ========================= */
     let iva19 = text.match(/IVA\s*19%\s*([\d.,]+)/i)?.[1] || "";
     let iva5 = text.match(/IVA\s*5%\s*([\d.,]+)/i)?.[1] || "";
@@ -52,12 +79,13 @@ function extraerDatos(text) {
     const valor19 = text.match(/19\.00%\s*[\d.,]+\s*([\d.,]+)/)?.[1] || "";
     const base0 = text.match(/0\.00%\s*([\d.,]+)/)?.[1] || "";
     const valor0 = text.match(/0\.00%\s*[\d.,]+\s*([\d.,]+)/)?.[1] || "";
+    const base5 = text.match(/5\.00%\s*([\d.,]+)/)?.[1] || "";
+    const valor5 = text.match(/5\.00%\s*[\d.,]+\s*([\d.,]+)/)?.[1] || "";
 
     /* =========================
-       PRODUCTOS (CORRECCIÓN COCO Y VALORES)
+       PRODUCTOS
     ========================= */
     let productos = "";
-    // Regex flexible para capturar el nombre y los 4 valores numéricos
     const productRegex = /([A-Z0-9\s\+\-\*]{3,45})\s+(\d+\.\d{2})\s+(\d+)\s?%\s+([\d.,]+)\s+([\d.,]+)/g;
 
     let match;
@@ -65,18 +93,13 @@ function extraerDatos(text) {
         let nombre = match[1].trim();
         let cant = match[2];
         let imp = match[3];
-        
-        // INTERCAMBIO DE VALORES PARA SIIGO:
-        // En el flujo de texto, el primer valor después del % es el UNITARIO y el segundo el TOTAL (o viceversa)
-        // Según tu última prueba, los invertimos:
         let unit = match[4]; 
         let totalProd = match[5];
 
-        // Limpieza: Quitamos la palabra "Descripción" si quedó atrapada en el primer producto
         nombre = nombre.replace(/.*Descripción\s+/i, "").trim();
-
         const n = nombre.toLowerCase();
-        if (n.includes("iva") || n.includes("resumen") || n.includes("vendedor") || n.includes("dirección")) continue;
+        // Evitamos capturar líneas de etiquetas como si fueran productos
+        if (n.includes("iva") || n.includes("resumen") || n.includes("vendedor") || n.includes("cliente")) continue;
 
         productos += `
         <div class="product-row">
@@ -114,7 +137,8 @@ function extraerDatos(text) {
                 <b>COMESTIBLES LA VILLA S.A.S</b><br>
                 Nit 900.755.203-3<br>
                 Cll 134 107 B 19<br>
-                Bogotá<br><br>
+                Bogotá-Tel (601) 3103006527<br>
+                comestibleslabellavilla@hotmail.com<br><br>
                 <b>Factura electrónica de venta</b><br>
                 ${factura}
             </div>
@@ -122,9 +146,12 @@ function extraerDatos(text) {
         </div>
 
         <div class="divider"></div>
-        Fecha: ${fecha}<br><br>
-        Cliente: ${cliente}<br>
-        Nit / C.C.: ${nit}<br>
+        <b>Fecha:</b> ${fecha}<br>
+        <b>Vendedor:</b> ${vendedor}<br>
+        <b>Cliente:</b> ${cliente}<br>
+        <b>Nit / C.C.:</b> ${nit}<br>
+        <b>Direccion:</b> ${direccionCliente}<br>
+        
         <div class="divider"></div>
 
         <div class="product-header">
@@ -149,7 +176,7 @@ function extraerDatos(text) {
         <div class="row"><span>Tarifa</span><span>Base</span><span>Valor</span></div>
         ${base19 || valor19 ? `<div class="row"><span>19.00%</span><span>${base19}</span><span>${valor19}</span></div>` : ""}
         ${base0 || valor0 ? `<div class="row"><span>0.00%</span><span>${base0}</span><span>${valor0}</span></div>` : ""}
-
+        ${base5 || valor5 ? `<div class="row"><span>5.00%</span><span>${base5}</span><span>${valor5}</span></div>` : ""}
         <div class="divider"></div>
         <div class="center"><b>FORMA DE PAGO</b></div>
         <div class="forma">
@@ -172,7 +199,7 @@ function extraerDatos(text) {
         <div class="divider"></div>
         <div class="center">
             <b>CUFE</b><br>
-            ${cufe ? cufe.match(/.{1,42}/g).join("<br>") : ""}
+            ${cufe ? cufe.match(/.{1,49}/g).join("<br>") : ""}
         </div>
     `;
 
